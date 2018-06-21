@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.SorderMapper" >  
+
+<insert id="addOrder" parameterType="Sorder">
+     INSERT INTO sorder VALUES (null,#{lid},#{openid},#{total},#{cid},#{actual},#{status},#{ordertime},#{qid},null,#{nickname},#{tel})
+     <selectKey keyProperty="oid" order="AFTER" resultType="int">
+            select LAST_INSERT_ID()
+     </selectKey>
+</insert>
+
+<update id="updatePayStatus">
+    update sorder set status=#{1} where oid= #{0}
+</update>  
+
+<update id="updatePayTransactionID">
+    update sorder set transactionid=#{1} where oid= #{0}
+</update>
+
+<select id="getAllOrders" parameterType="string" resultType="map">
+     select s.*, l.lname, l.imgurl, l.lprice
+     from sorder s, lesson l
+     where s.lid = l.lid
+     and s.openid = #{openid}
+     order by ordertime desc
+</select>
+
+<select id="getSorderById" parameterType="int" resultType="Sorder">
+    select * from sorder where oid = #{oid}
+</select>
+  
+</mapper>

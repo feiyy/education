@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.FreeListenBookMapper" >  
+
+  <insert id="addFreeListen">
+      insert into freelistenbook values(null, #{0},#{1},#{2},now(),'待处理',#{3},#{4})
+  </insert>
+  
+  <select id="getFreeListenBook" resultType="FreeListenBook">
+      select flb.*, fl.imgurl
+      from freelisten fl, freelistenbook flb
+	where fl.id = flb.fid		
+	and fl.qid = #{1}
+	and flb.openid = #{0} 
+  </select>
+  
+  
+</mapper>

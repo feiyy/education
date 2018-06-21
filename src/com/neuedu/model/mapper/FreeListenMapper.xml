@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.FreeListenMapper" >  
+
+  <select id="getFreeListensTop" parameterType="int" resultType="FreeListen">
+      select * from freelisten where qid = #{qid} order by pubtime desc limit 0, 4
+  </select>
+  
+  
+  <select id="getFreeListens" parameterType="int" resultType="FreeListen">
+      select * from freelisten where qid = #{qid} order by pubtime desc
+  </select>
+  
+  <select id="getFreeListen" parameterType="int" resultMap="_freelisten">
+     select freelisten.*, address.branch,address.longitude, address.latitude, address.address, address.tel
+	from freelisten, address
+	where freelisten.branchid = address.id
+	and freelisten.id = #{fid}
+	and freelisten.status = '进行中'
+  </select>
+  
+  <resultMap type="FreeListen" id="_freelisten">
+      <id column="id" property="id"></id>
+      <result column="title" property="title"></result>
+      <result column="imgurl" property="imgurl"></result>
+      <result column="fdesc" property="fdesc"></result>
+      <association property="branch" javaType="Branch" column="branchid">
+           <result column="longitude" property="longitude"></result>
+	       <result column="latitude" property="latitude"></result>
+	       <result column="address" property="address"></result>
+	       <result column="tel" property="tel"></result>
+	       <result column="branch" property="branch"></result>
+      </association>
+  </resultMap>
+  
+</mapper>

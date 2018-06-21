@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.LessonMapper" >  
+
+  <select id="getAllLessons" parameterType="int"  resultType="Lesson">
+      select lid,lname,imgurl,lprice,category from lesson where qid = #{qid} order by pubtime desc
+  </select>
+  
+  <select id="getLessonsTop" parameterType="int"  resultType="Lesson">
+      select lid,lname,imgurl,lprice,category from lesson where qid = #{qid} order by pubtime desc limit 0,3
+  </select>
+  
+  <select id="getLessonDetailById" parameterType="int" resultMap="_lesson">
+      select lesson.*, address.branch,address.address, address.tel, address.latitude, address.longitude
+from lesson, lessonbranch, address
+where lesson.lid = lessonbranch.lid
+and lessonbranch.branchid = address.id
+and lesson.lid = #{lid}
+  </select>
+  
+  <resultMap type="Lesson" id="_lesson">
+       <id column="lid" property="lid"></id>
+       <result column="lname" property="lname"/>
+       <result column="imgurl" property="imgurl"/>
+       <result column="lprice" property="lprice"/>
+       <result column="category" property="category"/>
+       <result column="ldesc" property="ldesc"/> 
+        <association property="branch" javaType="Branch">
+           <result column="longitude" property="longitude"></result>
+	       <result column="latitude" property="latitude"></result>
+	       <result column="address" property="address"></result>
+	       <result column="tel" property="tel"></result>
+	       <result column="branch" property="branch"></result>
+      </association> 
+  </resultMap>
+  
+  <select id="getBranches" parameterType="int" resultMap="_branchlesson">
+		    select lesson.*, lessonbranch.branchid, address.branch
+		from lesson, lessonbranch, address
+		where lesson.lid = lessonbranch.lid
+		and lessonbranch.branchid = address.id
+		and lesson.qid = #{qid}
+  </select>
+  
+  <resultMap type="Branch" id="_branchlesson">
+        <id column="branchid" property="id"></id>
+        <result column="branch" property="branch"/>
+        <collection property="lessons" ofType="Lesson" column="branchid">
+             <id column="lid" property="lid"></id>
+             <result column="lname" property="lname"/>
+             <result column="imgurl" property="imgurl"/>
+             <result column="lprice" property="lprice"/>
+             <result column="category" property="category"/>        
+        </collection>
+  </resultMap>
+  
+</mapper>

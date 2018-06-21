@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.MessageMapper">
+
+    <select id="getMessageImgs" parameterType="int" resultMap="_messageimg">
+         select m.*, mi.imgurl
+        from message m, messageimg mi
+        where m.mid = mi.mid
+        and m.qid = #{qid}
+        order by m.mtime desc
+    </select>
+
+    <select id="getMessageLikes" parameterType="int" resultMap="_messagelike">
+        select m.*, ml.nickname
+        from message m, messagelike ml
+        where m.mid = ml.mid
+        and m.qid = #{qid}
+        order by ml.stime
+    </select>
+
+    <select id="getMessageReplies" parameterType="int" resultMap="_messagereply">
+        select m.*, mr.nickname, mr.content
+        from message m, messagereply mr
+        where m.mid = mr.mid
+        and m.qid = #{qid}
+        order by mr.stime
+    </select>
+    <resultMap id="_messageimg" type="Message">
+        <id column="mid" property="mid"></id>
+        <result column="mtitle" property="mtitle"></result>
+        <result column="mtime" property="mtime"></result>
+        <collection property="messageimgList" ofType="Messageimg" column="mid">
+            <result column="imgurl" property="imgurl"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="_messagelike" type="Message">
+        <id column="mid" property="mid"></id>
+        <result column="mtitle" property="mtitle"></result>
+        <collection property="messagelikeList" ofType="string" column="mid">
+            <result column="nickname"></result>
+        </collection>
+    </resultMap>
+
+    <resultMap id="_messagereply" type="Message">
+        <id column="mid" property="mid"></id>
+        <result column="mtitle" property="mtitle"></result>
+        <collection property="messagereplyList" ofType="Messagereply" column="mid">
+            <result column="nickname" property="nickname"></result>
+            <result column="content" property="content"></result>
+        </collection>
+    </resultMap>
+    
+    <insert id="addLike">
+        insert into messagelike values(null, #{0},#{1}, now())
+    </insert>
+    
+    <insert id="addComment">
+        insert into messagereply values(null, #{0},#{2},#{1},now())
+    </insert>
+
+</mapper>        

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neuedu.model.mapper.RefundMapper" >  
+
+  <insert id="addRefund">
+      insert into refund values(#{0},#{1},now(),'待处理')
+  </insert>
+  
+  <update id="updateRefundStatus" parameterType="int">
+     update refund set status = '已处理' where oid = #{oid}
+  </update>
+  
+</mapper>
